@@ -114,6 +114,8 @@ static void usb_kbd_irq(struct urb *urb)
 		goto resubmit;
 	}
 
+	printk(KERN_INFO "TESTE\n");
+
 	/* Process modifier keys (like Shift, Ctrl, etc.) */
 	for (i = 0; i < 8; i++) {
 		input_report_key(kbd->dev, usb_kbd_keycode[i + 224], (kbd->new[0] >> i) & 1);
@@ -403,4 +405,7 @@ static struct usb_driver usb_kbd_driver = {
 	.id_table =	usb_kbd_id_table,
 };
 
+
 module_usb_driver(usb_kbd_driver);
+
+printk(KERN_ALERT "TESTE\n");

@@ -1,0 +1,1 @@
+cmd_/home/david/Documentos/ihs/keyboard-macros-linux-driver/usbhid.o := ld -m elf_x86_64 -z noexecstack --no-warn-rwx-segments   -r -o /home/david/Documentos/ihs/keyboard-macros-linux-driver/usbhid.o @/home/david/Documentos/ihs/keyboard-macros-linux-driver/usbhid.mod 
