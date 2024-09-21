@@ -1,0 +1,8 @@
+*.cmd
+Module.symvers
+modules.order
+usbkbd.ko
+usbkbd.mod
+usbkbd.mod.c
+usbkbd.mod.o
+usbkbd.o
