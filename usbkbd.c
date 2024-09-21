@@ -114,8 +114,6 @@ static void usb_kbd_irq(struct urb *urb)
 		goto resubmit;
 	}
 
-	pr_info("TESTE\n");
-
 	/* Process modifier keys (like Shift, Ctrl, etc.) */
 	for (i = 0; i < 8; i++) {
 		input_report_key(kbd->dev, usb_kbd_keycode[i + 224], (kbd->new[0] >> i) & 1);
@@ -123,6 +121,7 @@ static void usb_kbd_irq(struct urb *urb)
 		if ((kbd->new[0] >> i) & 1) {
 			pr_info("Modifier key (scancode %#x) pressed.\n", usb_kbd_keycode[i + 224]);
 		}
+		
 	}
 
 	/* Process normal keys */
