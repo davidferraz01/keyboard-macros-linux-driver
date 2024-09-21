@@ -1319,8 +1319,8 @@ static bool usbhid_may_wakeup(struct hid_device *hid)
 	return device_may_wakeup(&dev->dev);
 }
 
-/*
-static const struct hid_ll_driver usb_hid_driver = {
+// remove static const struct hid_ll_driver usb_hid_driver
+struct hid_ll_driver usb_hid_driver = {
 	.parse = usbhid_parse,
 	.start = usbhid_start,
 	.stop = usbhid_stop,
@@ -1335,13 +1335,14 @@ static const struct hid_ll_driver usb_hid_driver = {
 	.may_wakeup = usbhid_may_wakeup,
 };
 	
-
+/* remove function redefinition
 bool hid_is_usb(const struct hid_device *hdev)
 {
 	return hdev->ll_driver == &usb_hid_driver;
 }
 EXPORT_SYMBOL_GPL(hid_is_usb);
 */
+
 static int usbhid_probe(struct usb_interface *intf, const struct usb_device_id *id)
 {
 	struct usb_host_interface *interface = intf->cur_altsetting;

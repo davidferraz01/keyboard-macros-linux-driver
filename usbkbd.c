@@ -114,14 +114,14 @@ static void usb_kbd_irq(struct urb *urb)
 		goto resubmit;
 	}
 
-	printk(KERN_INFO "TESTE\n");
+	pr_info("TESTE\n");
 
 	/* Process modifier keys (like Shift, Ctrl, etc.) */
 	for (i = 0; i < 8; i++) {
 		input_report_key(kbd->dev, usb_kbd_keycode[i + 224], (kbd->new[0] >> i) & 1);
 		/* Print modifier key state */
 		if ((kbd->new[0] >> i) & 1) {
-			printk(KERN_INFO "Modifier key (scancode %#x) pressed.\n", usb_kbd_keycode[i + 224]);
+			pr_info("Modifier key (scancode %#x) pressed.\n", usb_kbd_keycode[i + 224]);
 		}
 	}
 
@@ -131,7 +131,7 @@ static void usb_kbd_irq(struct urb *urb)
 		if (kbd->old[i] > 3 && memscan(kbd->new + 2, kbd->old[i], 6) == kbd->new + 8) {
 			if (usb_kbd_keycode[kbd->old[i]]) {
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->old[i]], 0);
-				printk(KERN_INFO "Key (scancode %#x) released.\n", usb_kbd_keycode[kbd->old[i]]);
+				pr_info("Key (scancode %#x) released.\n", usb_kbd_keycode[kbd->old[i]]);
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) released.\n", kbd->old[i]);
 			}
@@ -140,7 +140,7 @@ static void usb_kbd_irq(struct urb *urb)
 		if (kbd->new[i] > 3 && memscan(kbd->old + 2, kbd->new[i], 6) == kbd->old + 8) {
 			if (usb_kbd_keycode[kbd->new[i]]) {
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->new[i]], 1);
-				printk(KERN_INFO "Key (scancode %#x) pressed.\n", usb_kbd_keycode[kbd->new[i]]);
+				pr_info("Key (scancode %#x) pressed.\n", usb_kbd_keycode[kbd->new[i]]);
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) pressed.\n", kbd->new[i]);
 			}
@@ -405,7 +405,5 @@ static struct usb_driver usb_kbd_driver = {
 	.id_table =	usb_kbd_id_table,
 };
 
-
+pr_info("TESTE_INIT\n");
 module_usb_driver(usb_kbd_driver);
-
-printk(KERN_ALERT "TESTE\n");
