@@ -1,1 +1,0 @@
-cmd_/home/david/Documentos/ihs/keyboard-macros-linux-driver/usbkbd.mod := printf '%s\n'   usbkbd.o | awk '!x[$$0]++ { print("/home/david/Documentos/ihs/keyboard-macros-linux-driver/"$$0) }' > /home/david/Documentos/ihs/keyboard-macros-linux-driver/usbkbd.mod
