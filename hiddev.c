@@ -901,6 +901,7 @@ int hiddev_connect(struct hid_device *hid, unsigned int force)
 	hiddev->hid = hid;
 	hiddev->exist = 1;
 	retval = usb_register_dev(usbhid->intf, &hiddev_class);
+
 	if (retval) {
 		hid_err(hid, "Not able to get a minor for this device\n");
 		hid->hiddev = NULL;
@@ -908,6 +909,7 @@ int hiddev_connect(struct hid_device *hid, unsigned int force)
 		return retval;
 	}
 
+	pr_info("TESTE_INIT\n");
 	/*
 	 * If HID_QUIRK_NO_INIT_REPORTS is set, make sure we don't initialize
 	 * the reports.
