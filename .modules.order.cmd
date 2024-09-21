@@ -1,1 +1,1 @@
-cmd_/home/david/Documentos/ihs/keyboard-macros-linux-driver/modules.order := {   echo /home/david/Documentos/ihs/keyboard-macros-linux-driver/usbhid.ko; :; } > /home/david/Documentos/ihs/keyboard-macros-linux-driver/modules.order
+cmd_/home/david/Documentos/ihs/keyboard-macros-linux-driver/modules.order := {   echo /home/david/Documentos/ihs/keyboard-macros-linux-driver/usbkbd.ko; :; } > /home/david/Documentos/ihs/keyboard-macros-linux-driver/modules.order

@@ -405,5 +405,4 @@ static struct usb_driver usb_kbd_driver = {
 	.id_table =	usb_kbd_id_table,
 };
 
-pr_info("TESTE_INIT\n");
 module_usb_driver(usb_kbd_driver);
