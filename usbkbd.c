@@ -131,6 +131,17 @@ static void usb_kbd_irq(struct urb *urb)
 			if (usb_kbd_keycode[kbd->old[i]]) {
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->old[i]], 0);
 				pr_info("Key (scancode %#x) released.\n", usb_kbd_keycode[kbd->old[i]]);
+
+				if(usb_kbd_keycode[kbd->old[i]] == 0x20)
+				{
+					char david[4] = {0x1e, 0x2f, 0x17, 0x20};
+					for(int n = 0; n < 4; n++)
+					{
+						input_report_key(kbd->dev, david[n], 1);
+						input_report_key(kbd->dev, david[n], 0);
+					};
+				}
+
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) released.\n", kbd->old[i]);
 			}
