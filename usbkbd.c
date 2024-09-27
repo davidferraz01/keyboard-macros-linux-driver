@@ -86,6 +86,11 @@ struct usb_kbd {
 	char name[128];
 	char phys[64];
 
+
+	bool right_ctrl_pressed;
+	bool macros;
+
+
 	unsigned char *new;
 	struct usb_ctrlrequest *cr;
 	unsigned char *leds;
@@ -118,21 +123,41 @@ static void usb_kbd_irq(struct urb *urb)
 	for (i = 0; i < 8; i++) {
 		input_report_key(kbd->dev, usb_kbd_keycode[i + 224], (kbd->new[0] >> i) & 1);
 		/* Print modifier key state */
+		
+		if (usb_kbd_keycode[i + 224] == 0x61 && (kbd->new[0] >> i) & 1) {
+            kbd->right_ctrl_pressed = true;
+            pr_info("Right Ctrl key pressed.\n");
+        }
+
+	   	/*
 		if ((kbd->new[0] >> i) & 1) {
 			pr_info("Modifier key (scancode %#x) pressed.\n", usb_kbd_keycode[i + 224]);
 		}
-		
+		*/
 	}
 
 	/* Process normal keys */
 	for (i = 2; i < 8; i++) {
-
 		if (kbd->old[i] > 3 && memscan(kbd->new + 2, kbd->old[i], 6) == kbd->new + 8) {
 			if (usb_kbd_keycode[kbd->old[i]]) {
+
+				if (usb_kbd_keycode[kbd->old[i]] == 0x59 && kbd->right_ctrl_pressed) {
+					if(kbd->macros)
+					{
+						kbd->macros = false;
+						pr_info("Macros Deactivated!\n");
+					} 
+					else
+					{
+						kbd->macros = true;
+						pr_info("Macros Activated!\n");
+					}
+				}
+				
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->old[i]], 0);
 				pr_info("Key (scancode %#x) released.\n", usb_kbd_keycode[kbd->old[i]]);
 
-				if(usb_kbd_keycode[kbd->old[i]] == 0x20)
+				if(usb_kbd_keycode[kbd->old[i]] == 0x20 && kbd->macros)
 				{
 					char david[4] = {0x1e, 0x2f, 0x17, 0x20};
 					for(int n = 0; n < 4; n++)
@@ -141,7 +166,6 @@ static void usb_kbd_irq(struct urb *urb)
 						input_report_key(kbd->dev, david[n], 0);
 					};
 				}
-
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) released.\n", kbd->old[i]);
 			}
@@ -151,6 +175,12 @@ static void usb_kbd_irq(struct urb *urb)
 			if (usb_kbd_keycode[kbd->new[i]]) {
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->new[i]], 1);
 				pr_info("Key (scancode %#x) pressed.\n", usb_kbd_keycode[kbd->new[i]]);
+				/*
+				if (usb_kbd_keycode[kbd->new[i]] == 0x59 && right_ctrl_pressed) {
+					macros = true;
+					pr_info("Macros Activated!\n");
+				}*/
+
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) pressed.\n", kbd->new[i]);
 			}
