@@ -20,6 +20,7 @@
 #include <linux/init.h>
 #include <linux/usb/input.h>
 #include <linux/hid.h>
+#include <linux/delay.h>
 
 /*
  * Version Information
@@ -140,6 +141,8 @@ static void usb_kbd_irq(struct urb *urb)
 	for (i = 2; i < 8; i++) {
 		if (kbd->old[i] > 3 && memscan(kbd->new + 2, kbd->old[i], 6) == kbd->new + 8) {
 			if (usb_kbd_keycode[kbd->old[i]]) {
+				input_report_key(kbd->dev, usb_kbd_keycode[kbd->old[i]], 0);
+				pr_info("Key (scancode %#x) released.\n", usb_kbd_keycode[kbd->old[i]]);
 
 				if (usb_kbd_keycode[kbd->old[i]] == 0x59 && kbd->right_ctrl_pressed) {
 					if(kbd->macros)
@@ -153,19 +156,22 @@ static void usb_kbd_irq(struct urb *urb)
 						pr_info("Macros Activated!\n");
 					}
 				}
-				
-				input_report_key(kbd->dev, usb_kbd_keycode[kbd->old[i]], 0);
-				pr_info("Key (scancode %#x) released.\n", usb_kbd_keycode[kbd->old[i]]);
 
-				if(usb_kbd_keycode[kbd->old[i]] == 0x20 && kbd->macros)
-				{
-					char david[4] = {0x1e, 0x2f, 0x17, 0x20};
-					for(int n = 0; n < 4; n++)
-					{
-						input_report_key(kbd->dev, david[n], 1);
-						input_report_key(kbd->dev, david[n], 0);
-					};
+				if (usb_kbd_keycode[kbd->old[i]] == 0x2 && kbd->macros) {
+					pr_info("Combo 1 Mortal Kombat");
+					char combo[3] = {0x69, 0x69, 0x2c};
+					for (int n = 0; n < 3; n++) {
+						kbd->new[i] = combo[n];
+						kbd->old[i] = combo[n];
+						input_report_key(kbd->dev, kbd->new[i], 1);
+						mdelay(70);
+						input_sync(kbd->dev);
+						input_report_key(kbd->dev, kbd->old[i], 0);
+						mdelay(70);
+						input_sync(kbd->dev);
+					}
 				}
+
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) released.\n", kbd->old[i]);
 			}
@@ -175,11 +181,6 @@ static void usb_kbd_irq(struct urb *urb)
 			if (usb_kbd_keycode[kbd->new[i]]) {
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->new[i]], 1);
 				pr_info("Key (scancode %#x) pressed.\n", usb_kbd_keycode[kbd->new[i]]);
-				/*
-				if (usb_kbd_keycode[kbd->new[i]] == 0x59 && right_ctrl_pressed) {
-					macros = true;
-					pr_info("Macros Activated!\n");
-				}*/
 
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) pressed.\n", kbd->new[i]);
