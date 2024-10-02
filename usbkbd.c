@@ -103,6 +103,19 @@ struct usb_kbd {
 
 };
 
+void simulate_input(struct usb_kbd *kbd, char *input, int input_size) {
+    for (int n = 0; n < input_size; n++) {
+        input_report_key(kbd->dev, input[n], 1);
+        mdelay(70);
+        input_sync(kbd->dev);
+
+
+        input_report_key(kbd->dev, input[n], 0);
+        mdelay(70);
+        input_sync(kbd->dev);
+    }
+}
+
 static void usb_kbd_irq(struct urb *urb)
 {
 	struct usb_kbd *kbd = urb->context;
@@ -160,16 +173,7 @@ static void usb_kbd_irq(struct urb *urb)
 				if (usb_kbd_keycode[kbd->old[i]] == 0x2 && kbd->macros) {
 					pr_info("Combo 1 Mortal Kombat");
 					char combo[3] = {0x69, 0x69, 0x2c};
-					for (int n = 0; n < 3; n++) {
-						kbd->new[i] = combo[n];
-						kbd->old[i] = combo[n];
-						input_report_key(kbd->dev, kbd->new[i], 1);
-						mdelay(70);
-						input_sync(kbd->dev);
-						input_report_key(kbd->dev, kbd->old[i], 0);
-						mdelay(70);
-						input_sync(kbd->dev);
-					}
+					simulate_input(kbd, combo, 3);
 				}
 
 			} else {
