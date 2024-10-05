@@ -174,7 +174,20 @@ static void usb_kbd_irq(struct urb *urb)
 					pr_info("Combo 1 Mortal Kombat");
 					char combo[3] = {0x69, 0x69, 0x2c};
 					simulate_input(kbd, combo, 3);
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x3 && kbd->macros) {
+					pr_info("Combo 2 Mortal Kombat");
+					char combo[3] = {0x6a, 0x6a, 0x2d};
+					simulate_input(kbd, combo, 3);
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x4 && kbd->macros) {
+					pr_info("Combo 3 Mortal Kombat");
+					char combo[3] = {0x1f, 0x1f, 0x1e};
+					simulate_input(kbd, combo, 3);
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x5 && kbd->macros) {
+					pr_info("Combo 4 Mortal Kombat");
+					char combo[4] = {0x11, 0x11, 0x11, 0x1e};
+					simulate_input(kbd, combo, 4);
 				}
+
 
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) released.\n", kbd->old[i]);
