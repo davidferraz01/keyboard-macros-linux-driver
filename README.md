@@ -38,8 +38,6 @@ Durante o desenvolvimento foi constatado travamentos nas aplicações, mais perc
 
 ## Utilização
 
-- Executar Script `load_driver.sh` irá compilar e carregar o Driver no sistema, substituindo o driver atual, `usbhid`, pelo driver desejado `usbkbd` modificado.
-Após, o driver com os Macros já terá sido carregado e é possível utilizar o teclado normalmente para as tarefas diárias.
-- Para ativar/desativar os Macros basta utilizar a combinação `crtl_direito + /`.
-Pronto. Os Macros estarão funcionando nas teclas numérias.
-- Caso deseje voltar para o driver padrão basta executar o script `reset_driver.sh`.
+- Executar Script `load_driver.sh` irá compilar e carregar o Driver no sistema, substituindo o driver atual, `usbhid`, pelo driver desejado `usbkbd` modificado. Assim, o driver com os Macros já terá sido carregado e é possível utilizar o teclado normalmente para as tarefas diárias e os Macros.
+- Para ativar/desativar os Macros basta utilizar a combinação `crtl_direito + /`. Os mesmos estarão funcionando nas teclas numérias.
+- Caso deseje voltar para o driver padrão, `usbhid`, basta executar o script `reset_driver.sh`.
