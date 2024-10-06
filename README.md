@@ -29,8 +29,17 @@ Durante o desenvolvimento foi constatado travamentos nas aplicações, mais perc
 ## Observações
 
 - Nesse repositório, foi configurado Macros tendo como base os combos e movimentos do personagem Smoke do jogo **Ultimate Mortal Kombat 3** do Super Nintendo. 
-- Os Combos podem ser ativados com as teclas numéricas, além disso, visando a utilização do Driver no dia-a-dia foi adicionado uma combinação de teclas para ativar e desativar os Macros. Dessa forma, é possível utilizar o teclado normalmente nas tarefas diárias e ativar os Macros, quando desejar, utilizando a combinação: `crtl_direito + /`.
+- Os Combos podem ser ativados com as teclas numéricas, além disso, visando a utilização do Driver no dia-a-dia foi adicionado uma combinação de teclas para ativar e desativar os Macros. Dessa forma, é possível utilizar o teclado normalmente nas tarefas diárias e ativar/desativar os Macros, quando desejar, utilizando a combinação: `crtl_direito + /`.
 - Foi utilizado o Emulador **Snes9x** para executar o jogo;
 - O Driver foi desenvolvido e testado no Sistema Operacional Linux **Debian** 12 com a versão do Kernel 6.1.0-25-amd64;
 - Foi criado dois Scripts para auxiliar a carregar e descarregar o Driver, "load_driver.sh" e "reset_driver.sh" respectivamente.
 - O driver funciona para qualquer teclado USB conectado.
+- Os scripts `load_driver.sh` e `reset_driver.sh` precisão de permissão **sudo** para serem executados.
+
+## Utilização
+
+- Executar Script `load_driver.sh` irá compilar e carregar o Driver no sistema, substituindo o driver atual, `usbhid`, pelo driver desejado `usbkbd` modificado.
+Após, o driver com os Macros já terá sido carregado e é possível utilizar o teclado normalmente para as tarefas diárias.
+- Para ativar/desativar os Macros basta utilizar a combinação `crtl_direito + /`.
+Pronto. Os Macros estarão funcionando nas teclas numérias.
+- Caso deseje voltar para o driver padrão basta executar o script `reset_driver.sh`.
