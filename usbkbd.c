@@ -103,12 +103,13 @@ struct usb_kbd {
 
 };
 
-void simulate_input(struct usb_kbd *kbd, char *input, int input_size) {
-    for (int n = 0; n < input_size; n++) {
+void simulate_input(struct usb_kbd *kbd, char *input, int input_size)
+{
+    for (int n = 0; n < input_size; n++)
+	{
         input_report_key(kbd->dev, input[n], 1);
         mdelay(70);
         input_sync(kbd->dev);
-
 
         input_report_key(kbd->dev, input[n], 0);
         mdelay(70);
@@ -134,9 +135,9 @@ static void usb_kbd_irq(struct urb *urb)
 	}
 
 	/* Process modifier keys (like Shift, Ctrl, etc.) */
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < 8; i++)
+	{
 		input_report_key(kbd->dev, usb_kbd_keycode[i + 224], (kbd->new[0] >> i) & 1);
-		/* Print modifier key state */
 		
 		if (usb_kbd_keycode[i + 224] == 0x61 && (kbd->new[0] >> i) & 1) {
             kbd->right_ctrl_pressed = true;
@@ -144,6 +145,7 @@ static void usb_kbd_irq(struct urb *urb)
         }
 
 	   	/*
+		//Print modifier key state
 		if ((kbd->new[0] >> i) & 1) {
 			pr_info("Modifier key (scancode %#x) pressed.\n", usb_kbd_keycode[i + 224]);
 		}
@@ -157,7 +159,9 @@ static void usb_kbd_irq(struct urb *urb)
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->old[i]], 0);
 				pr_info("Key (scancode %#x) released.\n", usb_kbd_keycode[kbd->old[i]]);
 
-				if (usb_kbd_keycode[kbd->old[i]] == 0x59 && kbd->right_ctrl_pressed) {
+				// Activated or Deactivated Macros
+				if (usb_kbd_keycode[kbd->old[i]] == 0x59 && kbd->right_ctrl_pressed)
+				{
 					if(kbd->macros)
 					{
 						kbd->macros = false;
@@ -170,20 +174,29 @@ static void usb_kbd_irq(struct urb *urb)
 					}
 				}
 
+				// Handle Macros
 				if (usb_kbd_keycode[kbd->old[i]] == 0x2 && kbd->macros) {
-					pr_info("Combo 1 Mortal Kombat");
+					pr_info("Combo 1 UMK3 Smoke");
 					char combo[3] = {0x69, 0x69, 0x2c};
 					simulate_input(kbd, combo, 3);
 				} else if (usb_kbd_keycode[kbd->old[i]] == 0x3 && kbd->macros) {
-					pr_info("Combo 2 Mortal Kombat");
-					char combo[3] = {0x6a, 0x6a, 0x2d};
+					pr_info("Combo 1 UMK3 Smoke");
+					char combo[3] = {0x6a, 0x6a, 0x2c};
 					simulate_input(kbd, combo, 3);
 				} else if (usb_kbd_keycode[kbd->old[i]] == 0x4 && kbd->macros) {
-					pr_info("Combo 3 Mortal Kombat");
-					char combo[3] = {0x1f, 0x1f, 0x1e};
+					pr_info("Combo 2 UMK3 Smoke");
+					char combo[3] = {0x6a, 0x6a, 0x2d};
 					simulate_input(kbd, combo, 3);
 				} else if (usb_kbd_keycode[kbd->old[i]] == 0x5 && kbd->macros) {
-					pr_info("Combo 4 Mortal Kombat");
+					pr_info("Combo 2 UMK3 Smoke");
+					char combo[3] = {0x69, 0x69, 0x2d};
+					simulate_input(kbd, combo, 3); 
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x6 && kbd->macros) {
+					pr_info("Combo 3 UMK3 Smoke");
+					char combo[3] = {0x1f, 0x1f, 0x1e};
+					simulate_input(kbd, combo, 3);
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x7 && kbd->macros) {
+					pr_info("FriendShip UMK3 Smoke");
 					char combo[4] = {0x11, 0x11, 0x11, 0x1e};
 					simulate_input(kbd, combo, 4);
 				}
