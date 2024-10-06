@@ -13,16 +13,24 @@ Jogos competitivos como **Street Fighter** e **Mortal Kombat** exigem que os jog
 
 ## Desenvolvimento
 
-Será utilizado como base para esse projeto os Drivers realacionados os USBHID presentes no [repositório do Linux](https://github.com/torvalds/linux/blob/master/drivers/hid/usbhid). O driver USBHID (USB Human Interface Device) é responsável no Linux por gerenciar dispositivos de interface humana conectados via USB, como teclados, mouses, gamepads e outros dispositivos de entrada. Ele traduz os eventos gerados por esses dispositivos em um formato que o sistema operacional pode entender e utilizar. O mesmo é composto por vários arquivos de código contendo milhares de linhas. Dessa forma, foi decidido utilizar o Driver de teclado usb USBKBD, pois esse driver é simplificado e específico para teclados USB. Ele foi projetado para ser mais leve e rápido do que o driver USBHID, mas com suporte limitado a teclados USB básicos, ou seja, ele ignora funcionalidades avançadas como teclas multimídia ou teclados com recursos especiais. Além disso, o driver USBKBD geralmente é utilizado em ambientes em que o tamanho do kernel ou o desempenho são críticos, como sistemas embarcados ou inicializações rápidas, já que ele não precisa processar tantos tipos de dispositivos como o USBHID. Diferentemente do USBHID, o USBKBD suporta apenas teclados, e a implementação é otimizada para isso.
+Será utilizado como base para esse projeto os Drivers presentes no [repositório do Linux](https://github.com/torvalds/linux/blob/master/drivers/hid/usbhid). O driver `usbhid` (USB Human Interface Device) é responsável no Linux por gerenciar **dispositivos de interface humana** conectados via USB, como teclados, mouses, gamepads e outros dispositivos de entrada. Ele traduz os eventos gerados por esses dispositivos em um formato que o sistema operacional pode entender e utilizar. O mesmo é composto por vários arquivos de código contendo milhares de linhas. Dessa forma, foi decidido utilizar o Driver de teclado usb `usbkbd`, pois é simplificado e específico para teclados USB. As principais diferenças entre os drivers `usbhid` e `usbkbd` são:
 
-Seguindo essa Linha de raciocíneo, foi utilizado como base para o projeto o driver USBKBD. Mas para isso, foi necesário desenvolver uma forma de "forçar" o sistema utilizar o driver USBKBD ao invés do padrão USBHID, assim foi alterado o Makefile e criado o script "load_driver.sh"
+- `usbkbd` foi projetado para ser mais leve e rápido do que o driver `usbhid`, mas com suporte limitado a teclados USB básicos, ou seja, ele ignora funcionalidades avançadas como teclas multimídia ou teclados com recursos especiais. 
+- O driver `usbkbd` geralmente é utilizado em ambientes em que o tamanho do kernel ou o desempenho são críticos, como sistemas embarcados ou inicializações rápidas, já que ele não precisa processar tantos tipos de dispositivos como o `usbhid`. 
+- Diferentemente do `usbhid`, o `usbkbd` suporta apenas teclados, e a implementação é otimizada para isso.
+
+Seguindo essa Linha de raciocíneo, foi utilizado como base para o projeto o driver `usbkbd`. Mas para isso, foi necesário desenvolver uma forma de *"forçar"* o sistema utilizar o driver `usbkbd` ao invés do padrão `usbhid`, assim foi alterado o **Makefile** e criado o script `load_driver.sh`.
+
+Assim, foi necessário alterar a função `usb_kbd_irq` que é responsável por lidar com eventos de interrupção no driver de teclado USB que é chamada quando o teclado envia dados para o sistema.
+
+Durante o desenvolvimento foi constatado travamentos nas aplicações, mais perceptível no emulador, ao executar os macros. Houve a tentativa de utilizar **kthreads** para otimizar o processo, mas a função `usb_kbd_irq` apresenta uma rotina de interrupção e, em muitos casos, não é seguro ou apropriado criar e iniciar threads diretamente de dentro de uma rotina de interrupção. Como a criação de threads pode envolver operações bloqueantes, ela não é adequada para ser feita dentro de uma rotina de interrupção. Tais rotinas devem executar o mínimo possível para evitar atrasos no manuseio de outras interrupções. Assim, foi realizada a otimização do código sem utilizar **kthreads** e adicionado um **delay** de 70 milisegundos para simular o pressionar e soltar das teclas para garantir que as mesmas sejam captadas corretamente pela aplicação desejada.
 
 
 ## Observações
 
 - Nesse repositório, foi configurado Macros tendo como base os combos e movimentos do personagem Smoke do jogo **Ultimate Mortal Kombat 3** do Super Nintendo. 
 - Os Combos podem ser ativados com as teclas numéricas, além disso, visando a utilização do Driver no dia-a-dia foi adicionado uma combinação de teclas para ativar e desativar os Macros. Dessa forma, é possível utilizar o teclado normalmente nas tarefas diárias e ativar os Macros, quando desejar, utilizando a combinação: `crtl_direito + /`.
-- Foi utilizado o Emulador Snes9x para executar o jogo;
-- O Driver foi desenvolvido e testado no Sistema Operacional Linux Debian 12 6.1.0-25-amd64;
+- Foi utilizado o Emulador **Snes9x** para executar o jogo;
+- O Driver foi desenvolvido e testado no Sistema Operacional Linux **Debian** 12 com a versão do Kernel 6.1.0-25-amd64;
 - Foi criado dois Scripts para auxiliar a carregar e descarregar o Driver, "load_driver.sh" e "reset_driver.sh" respectivamente.
-- 
+- O driver funciona para qualquer teclado USB conectado.
