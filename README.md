@@ -28,13 +28,25 @@ Durante o desenvolvimento foi constatado travamentos nas aplicações, mais perc
 
 ## Observações
 
-- Nesse repositório, foi configurado Macros tendo como base os combos e movimentos do personagem Smoke do jogo **Ultimate Mortal Kombat 3** do Super Nintendo. 
-- Os Combos podem ser ativados com as teclas numéricas, além disso, visando a utilização do Driver no dia-a-dia foi adicionado uma combinação de teclas para ativar e desativar os Macros. Dessa forma, é possível utilizar o teclado normalmente nas tarefas diárias e ativar/desativar os Macros, quando desejar, utilizando a combinação: `crtl_direito + /`.
+- Nesse repositório, foi configurado Macros tendo como base os combos e movimentos do personagem *Smoke* do jogo **Ultimate Mortal Kombat 3** do Super Nintendo. 
+- Os Combos podem ser ativados com as teclas numéricas, além disso, visando a utilização do Driver no dia-a-dia foi adicionado uma combinação de teclas para ativar e desativar os Macros. Dessa forma, é possível utilizar o teclado normalmente nas tarefas diárias e ativar/desativar os Macros, quando desejar, utilizando a combinação: `crtl_direito + /`;
 - Foi utilizado o Emulador **Snes9x** para executar o jogo;
 - O Driver foi desenvolvido e testado no Sistema Operacional Linux **Debian** 12 com a versão do Kernel 6.1.0-25-amd64;
-- Foi criado dois Scripts para auxiliar a carregar e descarregar o Driver, "load_driver.sh" e "reset_driver.sh" respectivamente.
-- O driver funciona para qualquer teclado USB conectado.
-- Os scripts `load_driver.sh` e `reset_driver.sh` precisão de permissão **sudo** para serem executados.
+- Foi criado dois Scripts para auxiliar a carregar e descarregar o Driver, "load_driver.sh" e "reset_driver.sh" respectivamente;
+- O driver funciona para qualquer teclado USB conectado;
+- Os scripts `load_driver.sh` e `reset_driver.sh` precisão de permissão **sudo** para serem executados;
+- Foram implementados 3 Combos e uma Finalização:
+    - Combo 1 (Tridente): Teclas 1 e 2 (Lado esquerdo e direito do mapa respectivamente);
+    - Combo 2 (Teleporte com ataque): Teclas 3 e 4 (Lado esquerdo e direito do mapa respectivamente);
+    - Combo 3 (Sequência de Golpes): Tecla 5 (Qualquer lado);
+    - Finalização 1 (Friendship): 6.
+- Os botões no emulado foram configurados de tal forma:
+    - A = Tecla "x";
+    - B = Tecla "z";
+    - X = Tecla "a";
+    - Y = Tecla "s";
+    - L = Tecla "q";
+    - R = Tecla "w".
 
 ## Utilização
 
