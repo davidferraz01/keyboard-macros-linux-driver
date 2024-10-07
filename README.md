@@ -5,19 +5,25 @@ Jogos competitivos como **Street Fighter** e **Mortal Kombat** exigem que os jog
 
 ## Aplicações e Benefícios
 
-- **Execução de Combos**: Facilita a execução de combos em jogos de luta com uma tecla.
-- **Speedruns**: Permite a execução automatizada de sequências complexas para exploração de glitches e bugs em speedruns.
-- **Ações Automatizadas**: Configuração de macros para realizar tarefas repetitivas em jogos de estratégia e RPGs.
+- **Execução de Combos**: Facilita a execução de combos em jogos de luta com uma tecla;
+- **Speedruns**: Permite a execução automatizada de sequências complexas para exploração de glitches e bugs em speedruns;
+- **Ações Automatizadas**: Configuração de macros para realizar tarefas repetitivas em jogos de estratégia e RPGs;
 - **Acessibilidade**: Auxilia pessoas com baixa mobilidade nas mãos, permitindo que utilizem o driver para executar ações complexas com menos esforço.
 
 
 ## Desenvolvimento
 
-Será utilizado como base para esse projeto os Drivers presentes no [repositório do Linux](https://github.com/torvalds/linux/blob/master/drivers/hid/usbhid). O driver `usbhid` (USB Human Interface Device) é responsável no Linux por gerenciar **dispositivos de interface humana** conectados via USB, como teclados, mouses, gamepads e outros dispositivos de entrada. Ele traduz os eventos gerados por esses dispositivos em um formato que o sistema operacional pode entender e utilizar. O mesmo é composto por vários arquivos de código contendo milhares de linhas. Dessa forma, foi decidido utilizar o Driver de teclado usb `usbkbd`, pois é simplificado e específico para teclados USB. As principais diferenças entre os drivers `usbhid` e `usbkbd` são:
+#### Driver utilizado como Base:
 
-- `usbkbd` foi projetado para ser mais leve e rápido do que o driver `usbhid`, mas com suporte limitado a teclados USB básicos, ou seja, ele ignora funcionalidades avançadas como teclas multimídia ou teclados com recursos especiais. 
-- O driver `usbkbd` geralmente é utilizado em ambientes em que o tamanho do kernel ou o desempenho são críticos, como sistemas embarcados ou inicializações rápidas, já que ele não precisa processar tantos tipos de dispositivos como o `usbhid`. 
+Será utilizado como base para esse projeto os Drivers presentes no [repositório do Linux](https://github.com/torvalds/linux/blob/master/drivers/hid/usbhid). O driver `usbhid` (USB Human Interface Device) é responsável no Linux por gerenciar **dispositivos de interface humana** conectados via USB, como teclados, mouses, gamepads e outros dispositivos de entrada. Ele traduz os eventos gerados por esses dispositivos em um formato que o sistema operacional pode entender e utilizar. O mesmo é composto por vários arquivos de código contendo milhares de linhas. Dessa forma, foi decidido utilizar o Driver de teclado usb `usbkbd`, pois é simplificado e específico para teclados USB.
+
+#### As principais diferenças entre os drivers `usbhid` e `usbkbd` são:
+
+- `usbkbd` foi projetado para ser mais leve e rápido do que o driver `usbhid`, mas com suporte limitado a teclados USB básicos, ou seja, ele ignora funcionalidades avançadas como teclas multimídia ou teclados com recursos especiais;
+- O driver `usbkbd` geralmente é utilizado em ambientes em que o tamanho do kernel ou o desempenho são críticos, como sistemas embarcados ou inicializações rápidas, já que ele não precisa processar tantos tipos de dispositivos como o `usbhid`;
 - Diferentemente do `usbhid`, o `usbkbd` suporta apenas teclados, e a implementação é otimizada para isso.
+
+#### Dificuldades:
 
 Seguindo essa Linha de raciocínio, foi utilizado como base para o projeto o driver `usbkbd`. Mas para isso, foi necesário desenvolver uma forma de *"forçar"* o sistema utilizar o driver `usbkbd` ao invés do padrão `usbhid`, assim foi alterado o **Makefile** e criado o script `load_driver.sh`.
 
@@ -41,12 +47,12 @@ Durante o desenvolvimento foi constatado travamentos nas aplicações, mais perc
     - **Combo 3 (Sequência de Golpes):** Tecla 5 (Qualquer lado);
     - **Finalização 1 (Friendship):** Tecla 6.
 - Os controles no **Snes9x** foram configurados de tal forma:
-    - A = Tecla "x";
-    - B = Tecla "z";
-    - X = Tecla "a";
-    - Y = Tecla "s";
-    - L = Tecla "q";
-    - R = Tecla "w".
+    - **A:** Tecla "x";
+    - **B:** Tecla "z";
+    - **X:** Tecla "a";
+    - **Y:** Tecla "s";
+    - **L:** Tecla "q";
+    - **R:** Tecla "w".
 
 ## Utilização
 
