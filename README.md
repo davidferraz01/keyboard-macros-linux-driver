@@ -19,7 +19,7 @@ Será utilizado como base para esse projeto os Drivers presentes no [repositóri
 - O driver `usbkbd` geralmente é utilizado em ambientes em que o tamanho do kernel ou o desempenho são críticos, como sistemas embarcados ou inicializações rápidas, já que ele não precisa processar tantos tipos de dispositivos como o `usbhid`. 
 - Diferentemente do `usbhid`, o `usbkbd` suporta apenas teclados, e a implementação é otimizada para isso.
 
-Seguindo essa Linha de raciocíneo, foi utilizado como base para o projeto o driver `usbkbd`. Mas para isso, foi necesário desenvolver uma forma de *"forçar"* o sistema utilizar o driver `usbkbd` ao invés do padrão `usbhid`, assim foi alterado o **Makefile** e criado o script `load_driver.sh`.
+Seguindo essa Linha de raciocínio, foi utilizado como base para o projeto o driver `usbkbd`. Mas para isso, foi necesário desenvolver uma forma de *"forçar"* o sistema utilizar o driver `usbkbd` ao invés do padrão `usbhid`, assim foi alterado o **Makefile** e criado o script `load_driver.sh`.
 
 Assim, foi necessário alterar a função `usb_kbd_irq` que é responsável por lidar com eventos de interrupção no driver de teclado USB que é chamada quando o teclado envia dados para o sistema.
 
@@ -31,16 +31,16 @@ Durante o desenvolvimento foi constatado travamentos nas aplicações, mais perc
 - Nesse repositório, foi configurado Macros tendo como base os combos e movimentos do personagem *Smoke* do jogo **Ultimate Mortal Kombat 3** do Super Nintendo. 
 - Os Combos podem ser ativados com as teclas numéricas, além disso, visando a utilização do Driver no dia-a-dia foi adicionado uma combinação de teclas para ativar e desativar os Macros. Dessa forma, é possível utilizar o teclado normalmente nas tarefas diárias e ativar/desativar os Macros, quando desejar, utilizando a combinação: `crtl_direito + /`;
 - Foi utilizado o Emulador **Snes9x** para executar o jogo;
-- O Driver foi desenvolvido e testado no Sistema Operacional Linux **Debian** 12 com a versão do Kernel 6.1.0-25-amd64;
+- O Driver foi desenvolvido e testado no Sistema Operacional Linux **Debian** 12 com a versão do Kernel **6.1.0-25-amd64**;
 - Foi criado dois Scripts para auxiliar a carregar e descarregar o Driver, "load_driver.sh" e "reset_driver.sh" respectivamente;
 - O driver funciona para qualquer teclado USB conectado;
 - Os scripts `load_driver.sh` e `reset_driver.sh` precisão de permissão **sudo** para serem executados;
 - Foram implementados 3 Combos e uma Finalização:
-    - Combo 1 (Tridente): Teclas 1 e 2 (Lado esquerdo e direito do mapa respectivamente);
-    - Combo 2 (Teleporte com ataque): Teclas 3 e 4 (Lado esquerdo e direito do mapa respectivamente);
-    - Combo 3 (Sequência de Golpes): Tecla 5 (Qualquer lado);
-    - Finalização 1 (Friendship): 6.
-- Os botões no emulado foram configurados de tal forma:
+    - **Combo 1 (Tridente):** Teclas 1 e 2 (Lado esquerdo e direito do mapa respectivamente);
+    - **Combo 2 (Teleporte com ataque):** Teclas 3 e 4 (Lado esquerdo e direito do mapa respectivamente);
+    - **Combo 3 (Sequência de Golpes):** Tecla 5 (Qualquer lado);
+    - **Finalização 1 (Friendship):** Tecla 6.
+- Os controles no **Snes9x** foram configurados de tal forma:
     - A = Tecla "x";
     - B = Tecla "z";
     - X = Tecla "a";
