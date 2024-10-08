@@ -20,6 +20,7 @@
 #include <linux/init.h>
 #include <linux/usb/input.h>
 #include <linux/hid.h>
+#include <linux/delay.h>
 
 /*
  * Version Information
@@ -86,6 +87,11 @@ struct usb_kbd {
 	char name[128];
 	char phys[64];
 
+
+	bool right_ctrl_pressed;
+	bool macros;
+
+
 	unsigned char *new;
 	struct usb_ctrlrequest *cr;
 	unsigned char *leds;
@@ -96,6 +102,20 @@ struct usb_kbd {
 	bool led_urb_submitted;
 
 };
+
+void simulate_input(struct usb_kbd *kbd, char *input, int input_size)
+{
+    for (int n = 0; n < input_size; n++)
+	{
+        input_report_key(kbd->dev, input[n], 1);
+        mdelay(70);
+        input_sync(kbd->dev);
+
+        input_report_key(kbd->dev, input[n], 0);
+        mdelay(70);
+        input_sync(kbd->dev);
+    }
+}
 
 static void usb_kbd_irq(struct urb *urb)
 {
@@ -115,32 +135,72 @@ static void usb_kbd_irq(struct urb *urb)
 	}
 
 	/* Process modifier keys (like Shift, Ctrl, etc.) */
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < 8; i++)
+	{
 		input_report_key(kbd->dev, usb_kbd_keycode[i + 224], (kbd->new[0] >> i) & 1);
-		/* Print modifier key state */
+		
+		if (usb_kbd_keycode[i + 224] == 0x61 && (kbd->new[0] >> i) & 1) {
+            kbd->right_ctrl_pressed = true;
+            pr_info("Right Ctrl key pressed.\n");
+        }
+
+	   	/*
+		//Print modifier key state
 		if ((kbd->new[0] >> i) & 1) {
 			pr_info("Modifier key (scancode %#x) pressed.\n", usb_kbd_keycode[i + 224]);
 		}
-		
+		*/
 	}
 
 	/* Process normal keys */
 	for (i = 2; i < 8; i++) {
-
 		if (kbd->old[i] > 3 && memscan(kbd->new + 2, kbd->old[i], 6) == kbd->new + 8) {
 			if (usb_kbd_keycode[kbd->old[i]]) {
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->old[i]], 0);
 				pr_info("Key (scancode %#x) released.\n", usb_kbd_keycode[kbd->old[i]]);
 
-				if(usb_kbd_keycode[kbd->old[i]] == 0x20)
+				// Activated or Deactivated Macros
+				if (usb_kbd_keycode[kbd->old[i]] == 0x59 && kbd->right_ctrl_pressed)
 				{
-					char david[4] = {0x1e, 0x2f, 0x17, 0x20};
-					for(int n = 0; n < 4; n++)
+					if(kbd->macros)
 					{
-						input_report_key(kbd->dev, david[n], 1);
-						input_report_key(kbd->dev, david[n], 0);
-					};
+						kbd->macros = false;
+						pr_info("Macros Deactivated!\n");
+					} 
+					else
+					{
+						kbd->macros = true;
+						pr_info("Macros Activated!\n");
+					}
 				}
+
+				// Handle Macros
+				if (usb_kbd_keycode[kbd->old[i]] == 0x2 && kbd->macros) {
+					pr_info("Combo 1 UMK3 Smoke");
+					char combo[3] = {0x69, 0x69, 0x2c};
+					simulate_input(kbd, combo, 3);
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x3 && kbd->macros) {
+					pr_info("Combo 1 UMK3 Smoke");
+					char combo[3] = {0x6a, 0x6a, 0x2c};
+					simulate_input(kbd, combo, 3);
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x4 && kbd->macros) {
+					pr_info("Combo 2 UMK3 Smoke");
+					char combo[3] = {0x6a, 0x6a, 0x2d};
+					simulate_input(kbd, combo, 3);
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x5 && kbd->macros) {
+					pr_info("Combo 2 UMK3 Smoke");
+					char combo[3] = {0x69, 0x69, 0x2d};
+					simulate_input(kbd, combo, 3); 
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x6 && kbd->macros) {
+					pr_info("Combo 3 UMK3 Smoke");
+					char combo[3] = {0x1f, 0x1f, 0x1e};
+					simulate_input(kbd, combo, 3);
+				} else if (usb_kbd_keycode[kbd->old[i]] == 0x7 && kbd->macros) {
+					pr_info("FriendShip UMK3 Smoke");
+					char combo[4] = {0x11, 0x11, 0x11, 0x1e};
+					simulate_input(kbd, combo, 4);
+				}
+
 
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) released.\n", kbd->old[i]);
@@ -151,6 +211,7 @@ static void usb_kbd_irq(struct urb *urb)
 			if (usb_kbd_keycode[kbd->new[i]]) {
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->new[i]], 1);
 				pr_info("Key (scancode %#x) pressed.\n", usb_kbd_keycode[kbd->new[i]]);
+
 			} else {
 				hid_info(urb->dev, "Unknown key (scancode %#x) pressed.\n", kbd->new[i]);
 			}
