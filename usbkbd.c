@@ -105,13 +105,14 @@ struct usb_kbd {
 
 void simulate_input(struct usb_kbd *kbd, char *input, int input_size)
 {
+	// Simulating pressing the Macros keys with delay.
     for (int n = 0; n < input_size; n++)
 	{
-        input_report_key(kbd->dev, input[n], 1);
-        mdelay(70);
-        input_sync(kbd->dev);
+        input_report_key(kbd->dev, input[n], 1); // Pressed key.
+        mdelay(70); // Delay
+        input_sync(kbd->dev); // Notify the input subsystem that a set of input events ocurred.
 
-        input_report_key(kbd->dev, input[n], 0);
+        input_report_key(kbd->dev, input[n], 0); // Release key.
         mdelay(70);
         input_sync(kbd->dev);
     }
@@ -134,7 +135,7 @@ static void usb_kbd_irq(struct urb *urb)
 		goto resubmit;
 	}
 
-	/* Process modifier keys (like Shift, Ctrl, etc.) */
+	// Process modifier keys (Shift, Ctrl, etc.).
 	for (i = 0; i < 8; i++)
 	{
 		input_report_key(kbd->dev, usb_kbd_keycode[i + 224], (kbd->new[0] >> i) & 1);
@@ -152,11 +153,12 @@ static void usb_kbd_irq(struct urb *urb)
 		*/
 	}
 
-	/* Process normal keys */
+	// Process normal keys.
 	for (i = 2; i < 8; i++) {
 		if (kbd->old[i] > 3 && memscan(kbd->new + 2, kbd->old[i], 6) == kbd->new + 8) {
 			if (usb_kbd_keycode[kbd->old[i]]) {
 				input_report_key(kbd->dev, usb_kbd_keycode[kbd->old[i]], 0);
+				// Print Key info
 				pr_info("Key (scancode %#x) released.\n", usb_kbd_keycode[kbd->old[i]]);
 
 				// Activated or Deactivated Macros
@@ -177,7 +179,7 @@ static void usb_kbd_irq(struct urb *urb)
 				// Handle Macros
 				if (usb_kbd_keycode[kbd->old[i]] == 0x2 && kbd->macros) {
 					pr_info("Combo 1 UMK3 Smoke");
-					char combo[3] = {0x69, 0x69, 0x2c};
+					char combo[3] = {0x69, 0x69, 0x2c}; // Combo translated in keycode.
 					simulate_input(kbd, combo, 3);
 				} else if (usb_kbd_keycode[kbd->old[i]] == 0x3 && kbd->macros) {
 					pr_info("Combo 1 UMK3 Smoke");

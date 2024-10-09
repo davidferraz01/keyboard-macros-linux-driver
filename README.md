@@ -40,7 +40,7 @@ Durante o desenvolvimento foi constatado travamentos nas aplicações, mais perc
 - O Driver foi desenvolvido e testado no Sistema Operacional Linux **Debian** 12 com a versão do Kernel **6.1.0-25-amd64**;
 - Foi criado dois Scripts para auxiliar a carregar e descarregar o Driver, "load_driver.sh" e "reset_driver.sh" respectivamente;
 - O driver funciona para qualquer teclado USB conectado;
-- Os scripts `load_driver.sh` e `reset_driver.sh` precisão de permissão **sudo** para serem executados;
+- Os scripts `load_driver.sh` e `reset_driver.sh` precisam de permissão **sudo** para serem executados;
 - Foram implementados 3 Combos e uma Finalização:
     - **Combo 1 (Tridente):** Teclas 1 e 2 (Lado esquerdo e direito do mapa respectivamente);
     - **Combo 2 (Teleporte com ataque):** Teclas 3 e 4 (Lado esquerdo e direito do mapa respectivamente);
@@ -62,6 +62,6 @@ Durante o desenvolvimento foi constatado travamentos nas aplicações, mais perc
 
 ## Links
 
-- [Vídeo demonstrando funcionamento do Driver desenvolvido](https://drive.google.com/file/d/1RXtZvGd12Ql9lS3-nq74pw3zDT3d5h_6/view?usp=sharing)
+- [Vídeo demonstrando o funcionamento do Driver desenvolvido](https://drive.google.com/file/d/1RXtZvGd12Ql9lS3-nq74pw3zDT3d5h_6/view?usp=sharing)
 - [Slide de Apresentação da Ideia do Projeto](https://www.canva.com/design/DAGQYGRoi74/g9eV_RWwr4fT_52DsSq9lg/view?utm_content=DAGQYGRoi74&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 - [Slide de Apresentação Final](https://www.canva.com/design/DAGS2cmjjvc/ORikNf-5Qc0wvkhJESIWnQ/view?utm_content=DAGS2cmjjvc&utm_campaign=designshare&utm_medium=link&utm_source=editor)
